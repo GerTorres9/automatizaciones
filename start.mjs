@@ -6,30 +6,31 @@ process.env.N8N_LISTEN_ADDRESS = "0.0.0.0";
 process.env.N8N_PROTOCOL = process.env.N8N_PROTOCOL || "https";
 process.env.N8N_PROXY_HOPS = process.env.N8N_PROXY_HOPS || "1";
 
-// 2. Autodetectar la URL pública que inyecta Render (RENDER_EXTERNAL_URL)
-const rawExternalUrl = process.env.RENDER_EXTERNAL_URL || process.env.WEBHOOK_URL || "";
+// 2. Autodetectar la URL pública de Render (RENDER_EXTERNAL_URL)
+const rawExternalUrl =
+  process.env.RENDER_EXTERNAL_URL ||
+  process.env.WEBHOOK_URL ||
+  "https://n8n-automation-l4lw.onrender.com";
 const cleanExternalUrl = rawExternalUrl.replace(/\/+$/, "");
 
 if (cleanExternalUrl) {
   process.env.WEBHOOK_URL = process.env.WEBHOOK_URL || `${cleanExternalUrl}/`;
-  process.env.N8N_EDITOR_BASE_URL = process.env.N8N_EDITOR_BASE_URL || `${cleanExternalUrl}/`;
+  process.env.N8N_EDITOR_BASE_URL =
+    process.env.N8N_EDITOR_BASE_URL || `${cleanExternalUrl}/`;
 }
 
 const targetPingUrl =
-  process.env.KEEP_ALIVE_URL ||
-  (cleanExternalUrl
-    ? `${cleanExternalUrl}/healthz`
-    : `http://127.0.0.1:${process.env.N8N_PORT}/healthz`);
+  process.env.KEEP_ALIVE_URL || `${cleanExternalUrl}/healthz`;
 
 const intervalSeconds = Number(process.env.KEEP_ALIVE_INTERVAL_SECONDS) || 600;
 
 console.log("==========================================================");
 console.log(` Iniciando n8n en puerto : ${process.env.N8N_PORT}`);
-console.log(` URL Pública / Webhooks  : ${process.env.WEBHOOK_URL || "local"}`);
+console.log(` URL Pública / Webhooks  : ${process.env.WEBHOOK_URL}`);
 console.log(` Helper Keep-Alive 24/7  : Cada ${intervalSeconds}s -> ${targetPingUrl}`);
 console.log("==========================================================");
 
-// 3. Helper Keep-Alive 24/7 nativo en Node.js (sin procesos extra ni binarios de shell)
+// 3. Helper Keep-Alive 24/7 nativo en Node.js
 async function pingHealthcheck() {
   try {
     const response = await fetch(targetPingUrl, {
