@@ -1,12 +1,9 @@
 FROM docker.n8n.io/n8nio/n8n:latest
 
-USER root
+ENV NODE_OPTIONS="--max-old-space-size=384"
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-USER node
+COPY start.mjs /start.mjs
 
 EXPOSE 5678
 
-ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "node", "/start.mjs"]
