@@ -1,0 +1,53 @@
+{
+  "name": "Helper Keep-Alive 24/7 (Auto-Ping Render)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-10m",
+      "name": "Cada 10 Minutos",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ ($env.RENDER_EXTERNAL_URL || $env.WEBHOOK_URL).replace(/\\/$/, '') + '/healthz' }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "http-ping-healthz",
+      "name": "Ping URL Publica Render",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    }
+  ],
+  "connections": {
+    "Cada 10 Minutos": {
+      "main": [
+        [
+          {
+            "node": "Ping URL Publica Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

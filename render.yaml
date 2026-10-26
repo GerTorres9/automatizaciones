@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: n8n-automation
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: N8N_PROTOCOL
+        value: https
+      - key: NODE_ENV
+        value: production
+      - key: N8N_PROXY_HOPS
+        value: "1"
+      - key: GENERIC_TIMEZONE
+        value: America/Mexico_City
+      - key: TZ
+        value: America/Mexico_City
+      - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+        value: "true"
+      - key: N8N_RUNNERS_ENABLED
+        value: "true"
+      - key: KEEP_ALIVE_INTERVAL_SECONDS
+        value: "600"
+      # Render genera automáticamente esta llave secreta para cifrar credenciales de n8n
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      # -------------------------------------------------------------------------
+      # OPCIONAL PERO RECOMENDADO: Base de datos PostgreSQL gratuita (Supabase o Neon)
+      # para que tus workflows y credenciales persistan si Render reinicia el contenedor.
+      # Descomenta o agrégalas en el panel de Render -> Environment:
+      # -------------------------------------------------------------------------
+      # - key: DB_TYPE
+      #   value: postgresdb
+      # - key: DB_POSTGRESDB_HOST
+      #   value: aws-0-us-west-1.pooler.supabase.com
+      # - key: DB_POSTGRESDB_PORT
+      #   value: "5432"
+      # - key: DB_POSTGRESDB_DATABASE
+      #   value: postgres
+      # - key: DB_POSTGRESDB_USER
+      #   value: postgres.tu_proyecto
+      # - key: DB_POSTGRESDB_PASSWORD
+      #   value: tu_password
+      # - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
+      #   value: "false"
