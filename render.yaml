@@ -21,6 +21,10 @@ services:
       - key: N8N_DIAGNOSTICS_ENABLED
         value: "false"
       - key: KEEP_ALIVE_INTERVAL_SECONDS
-        value: "600"
+        value: "240"
       - key: N8N_ENCRYPTION_KEY
         generateValue: true
+      # Para persistencia permanente al actualizar o reiniciar, pega tu URL de PostgreSQL
+      # (ej. de Neon.tech o Supabase) en Render -> Environment -> DATABASE_URL
+      - key: DATABASE_URL
+        sync: false
